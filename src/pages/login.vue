@@ -1,24 +1,55 @@
 <template>
-  <div>
-      <navbar />
-      <h1>This is login page</h1>
-  </div>
+<div id='login'>
+  <navbar />
+        <h1>Login</h1>
+        <input type='text' name='username' v-model='input.username' placeholder="Username" />
+        <br>
+        <input type='password' name='password' v-model='input.password' placeholder="Password" />
+        <br>
+        <button type='button' v-on:click='login()'>Login</button>
+    </div>
 </template>
 
 <script>
 import navbar from '@/components/navbar.vue'
-import { mapGetters } from 'vuex'
 export default {
-  name: 'login',
+  name: 'Login',
   components: {
     navbar: navbar
   },
-  computed: {
-    ...mapGetters(['login'])
+  data () {
+    return {
+      input: {
+        username: '',
+        password: ''
+      }
+    }
+  },
+  methods: {
+    login () {
+      if (this.input.username !== '' && this.input.password !== '') {
+        if (this.input.username === this.$parent.mockAccount.username && this.input.password === this.$parent.mockAccount.password) {
+          this.$emit('authenticated', true)
+          this.$router.replace({ name: 'secure' })
+        } else {
+          console.log('The username and / or password is incorrect')
+        }
+      } else {
+        console.log('A username and password must be present')
+      }
+    }
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+/* #login {
+        width: 500px;
+        border: 1px solid #CCCCCC;
+        background-color: #FFFFFF;
+        margin: auto;
+        margin-top: 200px;
+        padding: 20px;
+    } */
 </style>
+More
