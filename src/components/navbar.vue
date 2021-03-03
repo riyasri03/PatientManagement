@@ -1,7 +1,7 @@
 <template>
   <nav class='navbar'>
       <ul>
-      <li><router-link to ="/home" class="active" >Home</router-link></li>
+      <li><router-link to ="/home" >Home</router-link></li>
       <li><router-link to ="/login">Login</router-link></li>
       <li><router-link to ="/registration">New Patient</router-link></li>
       <li><a href='#'>Contact Us</a></li>
@@ -12,25 +12,14 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 export default {
-  name: 'navbar',
-  methods: {
-    ...mapActions(['setLoginAction']),
-    clicked () {
-      // this.setLoginAction('hayyy I am updated by map action')
-    }
-  },
-  created () {
-    this.setLoginAction('hayyy I am updated by map action')
-  }
+  name: 'navbar'
 }
 </script>
 
 <style>
 .navbar {
     height: 50px;
-    background-color: aqua;
 }
 a{
     margin: 10px;
@@ -59,7 +48,7 @@ li a:hover:not(.active) {
   background-color:greenyellow;
 }
 
-.active {
+/* .active {
   background-color: greenyellow;
-}
+} */
 </style>

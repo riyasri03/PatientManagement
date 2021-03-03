@@ -1,47 +1,73 @@
 <template>
 <div id='login' class='bg-img'>
   <navbar />
-        <form action="" class="container">
+        <div class="container">
         <h1>Login</h1>
         <label for="email"><b>Email</b></label>
         <br>
-        <input type='text' name='username' v-model='input.username' placeholder="Username" id="" />
+        <input type='text' name='username' v-model='username' placeholder="Username" label="username" />
         <br>
         <label for="psw"><b>Password</b></label>
         <br>
-        <input type='password' name='password' v-model='input.password' placeholder="Password" />
+        <input type='password' name='password' v-model='password' placeholder="Password" label="password" />
         <br>
-        <button type='button' v-on:click='login()'>Login</button>
-        </form>
+        <label for="psw"><b>Confirm Password</b></label>
+        <br>
+         <input type='password' name='cnfpassword' v-model='cnfpassword' placeholder="Confirm Password" label="cnfpassword" />
+          <p>Please select your Role:</p>
+          <input type="radio" id="doc" v-model="role" value="doc">
+          <label for="doc">Doctor</label><br>
+          <input type="radio" id="patient" v-model="role" value="patient">
+          <label for="patient">Patient</label><br>
+          <input type="radio" id="nurse" v-model="role" value="nurse">
+          <label for="other">Nurse</label>
+          <br>
+          <br>
+        <button type='button' v-on:click='onsubmit'>Login</button>
+        </div>
     </div>
 </template>
 
 <script>
 import navbar from '@/components/navbar.vue'
+import axios from 'axios'
 export default {
-  name: 'Login',
+  name: 'login',
   components: {
     navbar: navbar
   },
   data () {
     return {
-      input: {
-        username: '',
-        password: ''
-      }
+      username: '',
+      password: '',
+      cnfpassword: '',
+      role: ''
     }
   },
   methods: {
-    login () {
-      if (this.input.username !== '' && this.input.password !== '') {
-        if (this.input.username === this.$parent.mockAccount.username && this.input.password === this.$parent.mockAccount.password) {
-          this.$emit('authenticated', true)
-          this.$router.replace({ name: 'secure' })
-        } else {
-          console.log('The username and / or password is incorrect')
-        }
-      } else {
-        console.log('A username and password must be present')
+    validate () {
+      if (this.password !== this.cnfpassword) {
+        console.log('diff pass')
+        return false
+      }
+      return true
+    },
+    onsubmit () {
+      console.log('In submit')
+      const obj = {
+        username: this.username,
+        password: this.password,
+        cnfpassword: this.cnfpassword
+      }
+      console.log('Out..')
+      if (this.validate()) {
+        console.log('In..')
+        axios.post('http://10.177.68.116:8080/patient/login', obj).then((res) => {
+          console.log('response..', res)
+          if (this.role === 'doc') this.$router.push('/doclogin')
+          else if (this.role === 'patient') this.$router.push('/userlogin')
+          else this.$router.push('/nurselogin')
+        })
       }
     }
   }
@@ -74,20 +100,21 @@ input[type=text], input[type=password] {
   padding: 15px;
   margin: 5px 0 22px 0;
   border: none;
-  background: #f1f1f1;
+  background: black;
 }
 
 input[type=text]:focus, input[type=password]:focus {
-  background-color: #ddd;
+  background-color: #fff;
   outline: none;
 }
 .container {
   position: absolute;
   right: 90px;
   margin: 50px;
-  max-width: 500px;
+  width: 300px;
   padding: 20px;
   background-color: white;
+  opacity: 0.6;
+  color:black;
 }
 </style>
-More
