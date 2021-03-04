@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 import home from '@/pages/home.vue'
 import login from '@/pages/login.vue'
 import registration from '@/pages/registration.vue'
+import nurselogin from '@/pages/nurselogin.vue'
+import doclogin from '@/pages/doclogin.vue'
+import userlogin from '@/pages/userlogin.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +24,21 @@ const routes = [
     path: '/registration',
     name: 'registration',
     component: registration
+  },
+  {
+    path: '/doclogin',
+    name: 'doclogin',
+    component: doclogin
+  },
+  {
+    path: '/userlogin',
+    name: 'userlogin',
+    component: userlogin
+  },
+  {
+    path: '/nurselogin',
+    name: 'nurselogin',
+    component: nurselogin
   }
 ]
 

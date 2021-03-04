@@ -2,6 +2,8 @@
   <div>
     <navbar />
       <h1>This is doctor page</h1>
+      <button>History</button>
+      <button>End Consultation</button>
   </div>
 </template>
 
