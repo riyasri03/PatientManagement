@@ -3,17 +3,19 @@
   <navbar />
         <div class="container">
         <h1>Login</h1>
+        <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Avatar" class="avatar">
+        <br>
+        <br>
+        <i class="fa fa-user icon"></i>
         <label for="email"><b>Email</b></label>
         <br>
         <input type='text' name='username' v-model='username' placeholder="Username" label="username" />
         <br>
+        <i class="fa fa-key icon"></i>
         <label for="psw"><b>Password</b></label>
         <br>
         <input type='password' name='password' v-model='password' placeholder="Password" label="password" />
         <br>
-        <label for="psw"><b>Confirm Password</b></label>
-        <br>
-         <input type='password' name='cnfpassword' v-model='cnfpassword' placeholder="Confirm Password" label="cnfpassword" />
           <p>Please select your Role:</p>
           <input type="radio" id="doc" v-model="role" value="doc">
           <label for="doc">Doctor</label><br>
@@ -40,35 +42,33 @@ export default {
     return {
       username: '',
       password: '',
-      cnfpassword: '',
       role: ''
     }
   },
   methods: {
-    validate () {
-      if (this.password !== this.cnfpassword) {
-        console.log('diff pass')
-        return false
-      }
-      return true
-    },
     onsubmit () {
       console.log('In submit')
       const obj = {
         username: this.username,
-        password: this.password,
-        cnfpassword: this.cnfpassword
+        password: this.password
       }
-      console.log('Out..')
-      if (this.validate()) {
-        console.log('In..')
-        axios.post('http://10.177.68.116:8080/patient/login', obj).then((res) => {
-          console.log('response..', res)
-          if (this.role === 'doc') this.$router.push('/doclogin')
-          else if (this.role === 'patient') this.$router.push('/userlogin')
-          else this.$router.push('/nurselogin')
-        })
+      console.log('In..')
+      // const patienturl = 'http://10.177.68.116:8080/patient/login'
+      // const docurl = 'http://10.177.68.116:8080//login'
+      let url = ''
+      if (this.role === 'doc') {
+        url = 'http://10.177.68.116:8080/doctor/login'
+        this.$router.push('/doclogin')
+      } else if (this.role === 'patient') {
+        url = 'http://10.177.68.116:8080/patient/login'
+        this.$router.push('/userlogin')
+      } else {
+        url = 'http://10.177.68.116:8080/nurse/login'
+        this.$router.push('/nurselogin')
       }
+      axios.post(url, obj).then((res) => {
+        console.log('response..', res)
+      })
     }
   }
 }
@@ -116,5 +116,14 @@ input[type=text]:focus, input[type=password]:focus {
   background-color: white;
   opacity: 0.6;
   color:black;
+}
+img.avatar {
+  width: 40%;
+  border-radius: 50%;
+  opacity: none;
+}
+.footer {
+  background-color: #aaaaaa;
+  padding: 10px;
 }
 </style>

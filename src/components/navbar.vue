@@ -29,7 +29,7 @@ ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
+  background-color: #aaaaaa;
 }
 
 li {
@@ -45,7 +45,7 @@ li a {
 }
 
 li a:hover:not(.active) {
-  background-color:greenyellow;
+  background-color:#a4ebf3;
 }
 
 /* .active {
