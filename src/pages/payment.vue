@@ -1,10 +1,10 @@
 <template>
-  <h1>Patient List</h1>
+  <div><h1>Payment Successful!!</h1></div>
 </template>
 
 <script>
 export default {
-  name: 'patientList'
+  name: 'payment'
 }
 </script>
 

@@ -1,11 +1,11 @@
 <template>
   <nav class='navbar'>
       <ul>
-      <li><router-link to ="/home" >Home</router-link></li>
-      <li><router-link to ="/login">Login</router-link></li>
-      <li><router-link to ="/registration">New Patient</router-link></li>
-      <li><a href='#'>Contact Us</a></li>
-      <li style="float:right"><a href='#'>Emergency</a></li>
+      <li><router-link to ="/home" ><i class="fa fa-home"></i> Home</router-link></li>
+      <li><router-link to ="/login"><i class="fa fa-user"></i> Login</router-link></li>
+      <li><router-link to ="/registration"><i class="fa fa-clipboard"></i> New Patient</router-link></li>
+      <li><a v-on:click='onsubmit'><i class="fa fa-phone"></i>Contact Us</a></li>
+      <li style="float:right"><a v-on:click='onsubmit'><i class="fa fa-ambulance"></i> Emergency</a></li>
       </ul>
 
   </nav>
@@ -13,7 +13,12 @@
 
 <script>
 export default {
-  name: 'navbar'
+  name: 'navbar',
+  methods: {
+    onsubmit () {
+      window.scrollTo(0, document.body.scrollHeight)
+    }
+  }
 }
 </script>
 
