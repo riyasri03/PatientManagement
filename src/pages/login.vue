@@ -9,7 +9,7 @@
         <i class="fa fa-user icon"></i>
         <label for="email"><b>Email</b></label>
         <br>
-        <input type='text' name='username' v-model='username' placeholder="Username" label="username" />
+        <input type='text' name='email' v-model='email' placeholder="Email" label="email" />
         <br>
         <i class="fa fa-key icon"></i>
         <label for="psw"><b>Password</b></label>
@@ -17,15 +17,15 @@
         <input type='password' name='password' v-model='password' placeholder="Password" label="password" />
         <br>
           <p>Please select your Role:</p>
-          <input type="radio" id="doc" v-model="role" value="doc">
-          <label for="doc">Doctor</label><br>
-          <input type="radio" id="patient" v-model="role" value="patient">
-          <label for="patient">Patient</label><br>
-          <input type="radio" id="nurse" v-model="role" value="nurse">
+          <input type="radio" id="Doctor" v-model="role" value="Doctor" name='Doctor'>
+          <label for="Doctor">Doctor</label><br>
+          <input type="radio" id="Patient" v-model="role" value="Patient" name='Patient'>
+          <label for="Patient">Patient</label><br>
+          <input type="radio" id="nurse" v-model="role" value="nurse" name='nurse'>
           <label for="other">Nurse</label>
           <br>
           <br>
-        <button type='button' v-on:click='onsubmit'>Login</button>
+        <button type='button' v-on:click='onsubmit' class="btn login">Login</button>
         </div>
     </div>
 </template>
@@ -40,34 +40,28 @@ export default {
   },
   data () {
     return {
-      username: '',
+      email: '',
       password: '',
-      role: ''
+      role: []
     }
   },
   methods: {
     onsubmit () {
       console.log('In submit')
       const obj = {
-        username: this.username,
-        password: this.password
+        email: this.email,
+        password: this.password,
+        role: this.role
       }
-      console.log('In..')
-      // const patienturl = 'http://10.177.68.116:8080/patient/login'
-      // const docurl = 'http://10.177.68.116:8080//login'
-      let url = ''
-      if (this.role === 'doc') {
-        url = 'http://10.177.68.116:8080/doctor/login'
-        this.$router.push('/doclogin')
-      } else if (this.role === 'patient') {
-        url = 'http://10.177.68.116:8080/patient/login'
-        this.$router.push('/userlogin')
-      } else {
-        url = 'http://10.177.68.116:8080/nurse/login'
-        this.$router.push('/nurselogin')
-      }
-      axios.post(url, obj).then((res) => {
+      axios.post('http://10.177.68.116:8080/login/', obj).then((res) => {
         console.log('response..', res)
+        localStorage.setItem('id', res.data.id)
+        const det = res.data.id
+        const sts = res.data.status
+        if (this.role === 'Doctor' && det !== -1 && sts !== 400) this.$router.push('/doclogin')
+        else if (this.role === 'Patient' && det !== -1 && sts !== 400) this.$router.push('/userlogin')
+        else if (this.role === 'Nurse' && det !== -1 && sts !== 400) this.$router.push('/nurselogin')
+        else alert('wrong Uername or Password!!')
       })
     }
   }
@@ -75,14 +69,6 @@ export default {
 </script>
 
 <style scoped>
-/* #login {
-        width: 500px;
-        border: 1px solid #CCCCCC;
-        background-color: #FFFFFF;
-        margin: auto;
-        margin-top: 200px;
-        padding: 20px;
-    } */
 .bg-img {
   /* The image used */
   background-image: url("https://www.apollohospitals.com/images/patient-care/speak-patient.jpg");
@@ -99,7 +85,6 @@ input[type=text], input[type=password] {
   width: auto;
   padding: 15px;
   margin: 5px 0 22px 0;
-  border: none;
   background: black;
 }
 
@@ -116,6 +101,7 @@ input[type=text]:focus, input[type=password]:focus {
   background-color: white;
   opacity: 0.6;
   color:black;
+  border-radius: 20px;
 }
 img.avatar {
   width: 40%;
@@ -126,4 +112,14 @@ img.avatar {
   background-color: #aaaaaa;
   padding: 10px;
 }
+.btn {
+  border: none;
+  color: white;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.login {background-color: #4CAF50;} /* Green */
+.login:hover {background-color: #46a049;}
 </style>
