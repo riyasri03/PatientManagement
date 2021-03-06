@@ -5,7 +5,7 @@
       <li><router-link to ="/login"><i class="fa fa-user"></i> Login</router-link></li>
       <li><router-link to ="/registration"><i class="fa fa-clipboard"></i> New Patient</router-link></li>
       <li><a v-on:click='onsubmit'><i class="fa fa-phone"></i>Contact Us</a></li>
-      <li style="float:right"><a v-on:click='onsubmit'><i class="fa fa-ambulance"></i> Emergency</a></li>
+      <li id="emergency" style="color : red"><a v-on:click='onsubmit'><i class="fa fa-ambulance"></i> Emergency</a></li>
       </ul>
 
   </nav>
@@ -51,6 +51,10 @@ li a {
 
 li a:hover:not(.active) {
   background-color:#a4ebf3;
+}
+#emergency {
+ color: red;
+ float: right;
 }
 
 /* .active {
