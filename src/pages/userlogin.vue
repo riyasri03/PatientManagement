@@ -46,7 +46,7 @@
       </table>
        </div>
        <br><br>
-        <div> <router-link to="/payment"><button class="btn payment" @click="makePayment()">Make Payment</button></router-link></div>
+        <div><button class="btn payment" @click="makePayment">Make Payment</button></div>
        <router-link to ="/login"><button type='button' class=" btn payment"><i class="fa fa-sign-out"></i> Logout</button></router-link>
      </div>
 </template>
@@ -54,7 +54,7 @@
 <script>
 import navbar from '@/components/navbar.vue'
 import axios from 'axios'
-import { jsPDF } from 'jspdf'
+import jsPDF from 'jspdf'
 export default {
   name: 'userlogin',
   components: {
@@ -69,7 +69,8 @@ export default {
       histShow: false,
       validated: false,
       issue: '',
-      doctorName: ''
+      doctorName: '',
+      paymentHist: ''
     }
   },
   created () {
@@ -96,7 +97,19 @@ export default {
         issue: this.issue,
         doctorName: docname
       }
-      return obj
+      axios.put('http://10.177.68.116:8801/patient/makePayment/' + this.patientId, obj).then((results) => {
+        console.log('Success')
+        console.log(results)
+        localStorage.setItem('details', results.data)
+        this.results = results.data
+        if (this.results === '') {
+          alert('you alredy booked doctor')
+        }
+        console.log(results)
+      })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     history () {
       this.histShow = true
@@ -121,18 +134,13 @@ export default {
     // }
     makePayment () {
       this.patientId = localStorage.getItem('id')
-      axios.put('http://10.177.68.116:8801/patient/makePayment/' + this.patientId, this.obj).then((results) => {
-        console.log(results)
-        localStorage.setItem('details', results.data)
-        this.results = results.data
-        // eslint-disable-next-line new-cap
-        const doc = new jsPDF()
-        doc.text(this.results, 15, 15)
-        doc.save('temp.pdf')
-      })
-        .catch((error) => {
-          console.log(error)
-        })
+      // eslint-disable-next-line new-cap
+      const doc = new jsPDF()
+      doc.text(JSON.stringify(this.results), 15, 15)
+      doc.text('!!!PAYMENT SUCCESSFUL!!!', 65, 80)
+      doc.text('!!!AMOUNT PAID => 500!!!', 65, 100)
+      doc.save('temp.pdf')
+      this.$router.push('/payment')
     }
   }
 }

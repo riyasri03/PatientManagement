@@ -39,6 +39,15 @@
          <td>{{data.issue}}</td>
         </tr>
       </table>
+      <div>
+        <br>
+        <br>
+      <input type="text" placeholder="Search.." name="searchString" class="search" v-model="searchString">
+      <button type="submit" style="font-size: 20px;" @click="searchQuery"><i class="fa fa-search"></i></button>
+      </div>
+      <div v-for="i in search" :key="i.id">
+        {{i}}
+      </div>
       <router-link to ="/login"><button type='button' class=""><i class="fa fa-sign-out"></i> Logout</button></router-link>
   </div>
 </template>
@@ -57,7 +66,9 @@ export default {
       id: '',
       hist: [],
       histShow: false,
-      patientId: ''
+      patientId: '',
+      searchString: '',
+      search: ''
     }
   },
   mounted () {
@@ -82,6 +93,20 @@ export default {
         console.log(this.hist)
         this.hist.array.forEach(e => {
           this.hist.push(e)
+        })
+      })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    searchQuery () {
+      axios.get('http://10.177.68.116:8800/search/recordsFromHistory/' + this.searchString).then((output) => {
+        console.log(output)
+        localStorage.setItem('details', output.data)
+        this.search = output.data
+        console.log(this.search)
+        this.search.array.forEach(e => {
+          this.search.push(e)
         })
       })
         .catch((error) => {
