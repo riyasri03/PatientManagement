@@ -1,36 +1,60 @@
 <template>
   <div>
     <navbar />
-      <h1>This is patient login page</h1>
-      <label for="selection">Select your perferred Doctor</label>
+    <br>
+    <br>
+      <label id="seltext" for="selection">Select your perferred Doctor</label>
       <table style="width:100%">
-          <div v-for = 'res in results' :key="res.patientId">
         <tr>
-            <th>Doctor Id</th>
+             <th>Doctor Id</th>
             <th>Doctor Name</th>
             <th>Doctor Contact</th>
-            <th>Month</th>
-            <th>Issue</th>
+            <th>Doctor Email</th>
+            <th>Select Doctor</th>
         </tr>
-        <tr>
-      <td>{{res.doctorid}}</td>
+        <tr v-for = 'res in results' :key="res.patientId">
+      <td>{{res.doctorId}}</td>
       <td>{{res.doctorName}}</td>
       <td>{{res.doctorContact}}</td>
-      <td>{{res.month}}</td>
-      <td>{{res.issue}}</td>
-      </tr>
-      </div>
+      <td>{{res.doctorEmail}}</td>
+      <td><button :disabled="validated ? '' : disabled" @click="checkSelected(res.doctorId, res.doctorName)" >Select Doctor</button></td>
+       </tr>
       </table>
-      <label for="Issue"> Please Enter your Issue</label>
-      <input type="text" name="issue" value ="issue" >
-     <div> <router-link to="/payment"><button class="btn payment">Make Payment</button></router-link></div>
-     <router-link to ="/login"><button type='button' class=""><i class="fa fa-sign-out"></i> Logout</button></router-link>
-  </div>
+      <br>
+      <br>
+      <div id="issue">
+      <label for="Issue"> Please Enter your Medical Concern </label>
+      <input type="text" name="issue" v-model="issue">
+      </div>
+      <div>
+       <br>
+       <br>
+       <button @click="history" class="btn payment"> History</button>
+       <table v-show="histShow">
+       <tr>
+            <th>Doctor Name</th>
+            <th>Doctor Contact</th>
+            <th>Issue</th>
+            <th>Month</th>
+        </tr>
+       <tr v-for="data in hist" :key="data.id">
+         <td>{{data.doctorName}}</td>
+         <td>{{data.doctorContact}}</td>
+         <td>{{data.issue}}</td>
+         <td>{{data.month}}</td>
+        </tr>
+      </table>
+       </div>
+       <br><br>
+        <div> <router-link to="/payment"><button class="btn payment" @click="makePayment()">Make Payment</button></router-link></div>
+       <router-link to ="/login"><button type='button' class=" btn payment"><i class="fa fa-sign-out"></i> Logout</button></router-link>
+     </div>
 </template>
 
 <script>
 import navbar from '@/components/navbar.vue'
 import axios from 'axios'
+import { jsPDF } from 'jspdf'
 export default {
   name: 'userlogin',
   components: {
@@ -39,12 +63,23 @@ export default {
   data () {
     return {
       results: [],
-      patientId: ''
+      patientId: '',
+      doctorId: '',
+      hist: [],
+      histShow: false,
+      validated: false,
+      issue: '',
+      doctorName: ''
+    }
+  },
+  created () {
+    if (localStorage.getItem('sessionStatus') !== '200') {
+      this.$router.push('/login')
     }
   },
   mounted () {
     this.patientId = localStorage.getItem('id')
-    axios.get('http://10.177.68.116:8080/patient/doctorList/' + this.patientId).then((results) => {
+    axios.get('http://10.177.68.116:8801/patient/doctorList').then((results) => {
       console.log(results)
       localStorage.setItem('details', results.data)
       this.results = results.data
@@ -52,14 +87,78 @@ export default {
       .catch((error) => {
         console.log(error)
       })
+  },
+  methods: {
+    checkSelected (id, docname) {
+      this.validated = true
+      const obj = {
+        doctorId: id,
+        issue: this.issue,
+        doctorName: docname
+      }
+      return obj
+    },
+    history () {
+      this.histShow = true
+      this.patientId = localStorage.getItem('id')
+      axios.get('http://10.177.68.116:8801/patient/getPatientsHistory/' + this.patientId).then((output) => {
+        console.log(output)
+        localStorage.setItem('details', output.data)
+        this.hist = output.data
+        console.log(this.hist)
+        this.hist.array.forEach(e => {
+          this.hist.push(e)
+        })
+      })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    // selectDoctor () {
+    //   this.docId=localStorage.getItem('id')
+    //   axios.post('')
+
+    // }
+    makePayment () {
+      this.patientId = localStorage.getItem('id')
+      axios.put('http://10.177.68.116:8801/patient/makePayment/' + this.patientId, this.obj).then((results) => {
+        console.log(results)
+        localStorage.setItem('details', results.data)
+        this.results = results.data
+        // eslint-disable-next-line new-cap
+        const doc = new jsPDF()
+        doc.text(this.results, 15, 15)
+        doc.save('temp.pdf')
+      })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
   }
 }
 </script>
 
 <style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: inherit;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color:#aaaaaa;
+  color: white;
+}
 .payment {
   border-color: #4CAF50;
   color: green;
+  border-radius: 10px;
 }
 
 .payment:hover {
@@ -73,5 +172,26 @@ export default {
   padding: 10px 18px;
   font-size: 16px;
   cursor: pointer;
+}
+#seltext{
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-weight: bold;
+  font-size: 30px;
+}
+input[type=text]{
+  width: auto;
+  padding: 10px;
+  margin: 5px 0 30px 0;
+  background: whitesmoke;
+}
+
+input[type=text]:focus{
+  background-color: #fff;
+  outline: none;
+}
+#issue{
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-weight: bold;
+  font-size: 20px;
 }
 </style>

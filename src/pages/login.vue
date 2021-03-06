@@ -1,18 +1,20 @@
 <template>
+<div>
 <div id='login' class='bg-img'>
   <navbar />
         <div class="container">
         <h1>Login</h1>
-        <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Avatar" class="avatar">
-        <br>
+        <div style="font-size: 100px;">
+          <i class="fa fa-user-circle fa-10x"></i>
+        </div>
         <br>
         <i class="fa fa-user icon"></i>
-        <label for="email"><b>Email</b></label>
+        <label for="email"><b> Email</b></label>
         <br>
         <input type='text' name='email' v-model='email' placeholder="Email" label="email" />
         <br>
         <i class="fa fa-key icon"></i>
-        <label for="psw"><b>Password</b></label>
+        <label for="psw"><b> Password</b></label>
         <br>
         <input type='password' name='password' v-model='password' placeholder="Password" label="password" />
         <br>
@@ -28,6 +30,10 @@
         <button type='button' v-on:click='onsubmit' class="btn login">Login</button>
         </div>
     </div>
+    <div class="footer">
+          <p>Contact: 8563749284 for more Information and Emergency</p>
+         </div>
+     </div>
 </template>
 
 <script>
@@ -53,14 +59,15 @@ export default {
         password: this.password,
         role: this.role
       }
-      axios.post('http://10.177.68.116:8080/login/', obj).then((res) => {
+      axios.post('http://10.177.68.116:8801/login/', obj).then((res) => {
         console.log('response..', res)
         localStorage.setItem('id', res.data.id)
         const det = res.data.id
         const sts = res.data.status
+        localStorage.setItem('sessionStatus', sts)
         if (this.role === 'Doctor' && det !== -1 && sts !== 400) this.$router.push('/doclogin')
         else if (this.role === 'Patient' && det !== -1 && sts !== 400) this.$router.push('/userlogin')
-        else if (this.role === 'Nurse' && det !== -1 && sts !== 400) this.$router.push('/nurselogin')
+        else if (this.role === 'nurse' && sts === 200) this.$router.push('/nurselogin')
         else alert('wrong Uername or Password!!')
       })
     }
@@ -103,14 +110,9 @@ input[type=text]:focus, input[type=password]:focus {
   color:black;
   border-radius: 20px;
 }
-img.avatar {
-  width: 40%;
-  border-radius: 50%;
-  opacity: none;
-}
 .footer {
   background-color: #aaaaaa;
-  padding: 10px;
+  padding: 3px;
 }
 .btn {
   border: none;
@@ -122,4 +124,8 @@ img.avatar {
 }
 .login {background-color: #4CAF50;} /* Green */
 .login:hover {background-color: #46a049;}
+ body {
+   margin: 0%;
+
+}
 </style>

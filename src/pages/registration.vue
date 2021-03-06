@@ -13,7 +13,7 @@
       </div>
       <div>
         <label for="password">Password </label>
-        <input name="password" v-model="password" placeholder="password" type="Password">
+        <input name="password" v-model="password" placeholder="Password" type="password">
       </div>
       <div>
         <label for="gender">Gender</label>

@@ -41,6 +41,32 @@
       </tr>
       </div>
       </table>
+      <button @click="history" class="btn payment"> History</button>
+       <table v-show="histShow">
+       <tr>
+            <th>Patient Id</th>
+            <th>Patient Name</th>
+            <th>Patient Contact</th>
+            <th>Month</th>
+            <th>Issue</th>
+        </tr>
+       <tr v-for="data in hist" :key="data.id">
+         <td>{{data.patientId}}</td>
+         <td>{{data.patientName}}</td>
+         <td>{{data.patientContact}}</td>
+         <td>{{data.month}}</td>
+         <td>{{data.issue}}</td>
+        </tr>
+      </table>
+      <div>
+        <br>
+        <br>
+      <input type="text" placeholder="Search.." name="searchString" class="search" v-model="searchString">
+      <button type="submit" style="font-size: 20px;" @click="searchQuery"><i class="fa fa-search"></i></button>
+      </div>
+      <div v-for="i in search" :key="i.id">
+        {{i}}
+      </div>
       <div>
       <router-link to ="/login"><button type='button' class=""><i class="fa fa-sign-out"></i> Logout</button></router-link>
       </div>
@@ -60,22 +86,60 @@ export default {
       results: [],
       doctorId: '',
       res: [],
-      month: []
+      month: [],
+      patientId: '',
+      monthsend: '',
+      hist: [],
+      histShow: false,
+      searchString: '',
+      search: ''
     }
   },
   methods: {
     consultationEnd (id, index) {
-      const doctorId = this.doctorId
-      const patientId = id
-      const monthsend = this.month[index]
-      axios.put('http://10.177.68.116:8080/doctor/endConsultation/', { doctorId, patientId, monthsend }).then((res) => {
+      const obj = {
+        doctorId: this.doctorId,
+        patientId: id,
+        month: this.month[index]
+      }
+      axios.put('http://10.177.68.116:8801/doctor/endConsultation/', obj).then((res) => {
         console.log('response..', res)
       })
+    },
+    history () {
+      this.histShow = true
+      this.patientId = localStorage.getItem('id')
+      axios.get('http://10.177.68.116:8801/doctor/getPatientsHistory/' + this.patientId).then((output) => {
+        console.log(output)
+        localStorage.setItem('details', output.data)
+        this.hist = output.data
+        console.log(this.hist)
+        this.hist.array.forEach(e => {
+          this.hist.push(e)
+        })
+      })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    searchQuery () {
+      axios.get('http://10.177.68.116:8800/search/recordsFromHistory/' + this.searchString).then((output) => {
+        console.log(output)
+        localStorage.setItem('details', output.data)
+        this.search = output.data
+        console.log(this.search)
+        this.search.array.forEach(e => {
+          this.search.push(e)
+        })
+      })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   },
   mounted () {
     this.doctorId = localStorage.getItem('id')
-    axios.get('http://10.177.68.116:8080/doctor/patientList/' + this.doctorId).then((result) => {
+    axios.get('http://10.177.68.116:8801/doctor/patientList/' + this.doctorId).then((result) => {
       console.log(result)
       localStorage.setItem('details', result.data)
       this.results = result.data
@@ -83,6 +147,11 @@ export default {
       .catch((error) => {
         console.log(error)
       })
+  },
+  created () {
+    if (localStorage.getItem('sessionStatus') !== '200') {
+      this.$router.push('/login')
+    }
   }
 }
 </script>
@@ -120,5 +189,11 @@ th {
   padding: 14px 28px;
   font-size: 16px;
   cursor: pointer;
+}
+.search {
+  width: auto;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  background-color: whitesmoke;
 }
 </style>
