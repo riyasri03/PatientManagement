@@ -41,33 +41,36 @@
       </tr>
       </div>
       </table>
-      <button @click="history" class="btn payment"> History</button>
-       <table v-show="histShow">
-       <tr>
-            <th>Patient Id</th>
-            <th>Patient Name</th>
-            <th>Patient Contact</th>
-            <th>Month</th>
-            <th>Issue</th>
-        </tr>
-       <tr v-for="data in hist" :key="data.id">
-         <td>{{data.patientId}}</td>
-         <td>{{data.patientName}}</td>
-         <td>{{data.patientContact}}</td>
-         <td>{{data.month}}</td>
-         <td>{{data.issue}}</td>
-        </tr>
-      </table>
       <div>
         <br>
         <br>
+      <label for="searchString"><b>Previous Patients Records</b></label>
+      <br>
       <input type="text" placeholder="Search.." name="searchString" class="search" v-model="searchString">
       <button type="submit" style="font-size: 20px;" @click="searchQuery"><i class="fa fa-search"></i></button>
       </div>
-      <div v-for="i in search" :key="i.id">
-        {{i}}
-      </div>
+      <table v-show="histShow">
+      <tr>
+            <th>History Id</th>
+            <th>Patient Id</th>
+            <th>Doctor Id</th>
+            <th>Patient Name</th>
+            <th>Doctor Name</th>
+            <th>Month</th>
+            <th>Issue</th>
+        </tr>
+      <tr v-for="i in search" :key="i.id">
+        <td>{{i.historyId}}</td>
+         <td>{{i.patientId}}</td>
+         <td>{{i.doctorId}}</td>
+         <td>{{i.patientName}}</td>
+         <td>{{i.doctorName}}</td>
+         <td>{{i.month}}</td>
+         <td>{{i.issue}}</td>
+      </tr>
+      </table>
       <div>
+        <br><br>
       <router-link to ="/login"><button type='button' class=""><i class="fa fa-sign-out"></i> Logout</button></router-link>
       </div>
   </div>
@@ -109,7 +112,7 @@ export default {
     history () {
       this.histShow = true
       this.patientId = localStorage.getItem('id')
-      axios.get('http://10.177.68.116:8801/doctor/getPatientsHistory/' + this.patientId).then((output) => {
+      axios.get('http://10.177.68.116:8801/doctor/getPatientsHistory/' + this.doctorId).then((output) => {
         console.log(output)
         localStorage.setItem('details', output.data)
         this.hist = output.data
@@ -123,6 +126,7 @@ export default {
         })
     },
     searchQuery () {
+      this.histShow = true
       axios.get('http://10.177.68.116:8800/search/recordsFromHistory/' + this.searchString).then((output) => {
         console.log(output)
         localStorage.setItem('details', output.data)

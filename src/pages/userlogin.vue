@@ -46,7 +46,7 @@
       </table>
        </div>
        <br><br>
-        <div><button class="btn payment" @click="makePayment">Make Payment</button></div>
+        <div><button v-if="this.results !== '' " class="btn payment" @click="makePayment">Make Payment</button></div>
        <router-link to ="/login"><button type='button' class=" btn payment"><i class="fa fa-sign-out"></i> Logout</button></router-link>
      </div>
 </template>
@@ -136,8 +136,21 @@ export default {
       this.patientId = localStorage.getItem('id')
       // eslint-disable-next-line new-cap
       const doc = new jsPDF()
-      doc.text(JSON.stringify(this.results), 15, 15)
-      doc.text('!!!PAYMENT SUCCESSFUL!!!', 65, 80)
+      // let pdf = ''
+      // const str = JSON.stringify(this.results)
+      console.log(this.results)
+      // for (const i in str) {
+      //   const res = this.str[i]
+      //   pdf = pdf + res.invoiceId
+      // }
+
+      // doc.text(str, 10, 10)
+      // doc.text(JSON.stringify(this.results), 15, 15)
+      doc.text('Invoice Id: ' + this.results.invoiceId, 65, 20)
+      doc.text('Doctor Name: ' + this.results.doctorName, 65, 30)
+      doc.text('patient Name: ' + this.results.patientName, 65, 40)
+      doc.text('Doctor Contact: ' + this.results.doctorContact, 65, 50)
+      doc.text('!!!PAYMENT SUCCESSFUL!!! ', 65, 80)
       doc.text('!!!AMOUNT PAID => 500!!!', 65, 100)
       doc.save('temp.pdf')
       this.$router.push('/payment')
