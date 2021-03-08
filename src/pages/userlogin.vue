@@ -80,7 +80,7 @@ export default {
   },
   mounted () {
     this.patientId = localStorage.getItem('id')
-    axios.get('http://10.177.68.116:8801/patient/doctorList').then((results) => {
+    axios.get('http://10.177.68.61:8801/patient/doctorList').then((results) => {
       console.log(results)
       localStorage.setItem('details', results.data)
       this.results = results.data
@@ -97,13 +97,13 @@ export default {
         issue: this.issue,
         doctorName: docname
       }
-      axios.put('http://10.177.68.116:8801/patient/makePayment/' + this.patientId, obj).then((results) => {
+      axios.put('http://10.177.68.61:8801/patient/makePayment/' + this.patientId, obj).then((results) => {
         console.log('Success')
         console.log(results)
         localStorage.setItem('details', results.data)
         this.results = results.data
         if (this.results === '') {
-          alert('you alredy booked doctor')
+          alert('You have already booked a doctor!')
         }
         console.log(results)
       })
@@ -114,7 +114,7 @@ export default {
     history () {
       this.histShow = true
       this.patientId = localStorage.getItem('id')
-      axios.get('http://10.177.68.116:8801/patient/getPatientsHistory/' + this.patientId).then((output) => {
+      axios.get('http://10.177.68.61:8801/patient/getPatientsHistory/' + this.patientId).then((output) => {
         console.log(output)
         localStorage.setItem('details', output.data)
         this.hist = output.data

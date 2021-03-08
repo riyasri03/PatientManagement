@@ -4,7 +4,7 @@
       <li><router-link to ="/home" ><i class="fa fa-home"></i> Home</router-link></li>
       <li><router-link to ="/login"><i class="fa fa-user"></i> Login</router-link></li>
       <li><router-link to ="/registration"><i class="fa fa-clipboard"></i> New Patient</router-link></li>
-      <li><a v-on:click='onsubmit'><i class="fa fa-phone"></i>Contact Us</a></li>
+      <li><a v-on:click='onsubmit'><i class="fa fa-phone"></i> Contact Us</a></li>
       <li id="emergency" style="color : red"><a v-on:click='onsubmit'><i class="fa fa-ambulance"></i> Emergency</a></li>
       </ul>
 

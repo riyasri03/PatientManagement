@@ -7,7 +7,6 @@
         <div style="font-size: 100px;">
           <i class="fa fa-user-circle fa-10x"></i>
         </div>
-        <br>
         <i class="fa fa-user icon"></i>
         <label for="email"><b> Email</b></label>
         <br>
@@ -28,6 +27,8 @@
           <br>
           <br>
         <button type='button' v-on:click='onsubmit' class="btn login">Login</button>
+        <br>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
         </div>
     </div>
     <div class="footer">
@@ -59,7 +60,7 @@ export default {
         password: this.password,
         role: this.role
       }
-      axios.post('http://10.177.68.116:8801/login/', obj).then((res) => {
+      axios.post('http://10.177.68.61:8801/login/', obj).then((res) => {
         console.log('response..', res)
         localStorage.setItem('id', res.data.id)
         const det = res.data.id
@@ -70,6 +71,11 @@ export default {
         else if (this.role === 'nurse' && sts === 200) this.$router.push('/nurselogin')
         else alert('wrong Uername or Password!!')
       })
+    },
+    onSignIn (googleUser) {
+      console.log('fdfgdfs')
+      var idToken = googleUser.getAuthResponse().id_token
+      console.log(idToken)
     }
   }
 }
@@ -112,7 +118,7 @@ input[type=text]:focus, input[type=password]:focus {
 }
 .footer {
   background-color: #aaaaaa;
-  padding: 3px;
+  padding: 5px;
 }
 .btn {
   border: none;
@@ -127,5 +133,9 @@ input[type=text]:focus, input[type=password]:focus {
  body {
    margin: 0%;
 
+}
+.g-signin2 {
+  margin: 5px;
+  margin-left: 90px;
 }
 </style>

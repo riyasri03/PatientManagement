@@ -13,8 +13,7 @@
             <th>Month</th>
             <th>Cosultation </th>
         </tr>
-      <div v-for ='(res, index) in results' :key="res.doctorId">
-      <tr>
+      <tr v-for ='(res, index) in results' :key="res.doctorId">
       <td>{{res.id}}</td>
       <td>{{res.patientName}}</td>
       <td>{{res.patientContact}}</td>
@@ -39,7 +38,7 @@
         </select></td>
       <td><button @click="consultationEnd(res.id, index)" class="btn endconsult">consultation end</button></td>
       </tr>
-      </div>
+
       </table>
       <div>
         <br>
@@ -105,14 +104,14 @@ export default {
         patientId: id,
         month: this.month[index]
       }
-      axios.put('http://10.177.68.116:8801/doctor/endConsultation/', obj).then((res) => {
+      axios.put('http://10.177.68.61:8801/doctor/endConsultation/', obj).then((res) => {
         console.log('response..', res)
       })
     },
     history () {
       this.histShow = true
       this.patientId = localStorage.getItem('id')
-      axios.get('http://10.177.68.116:8801/doctor/getPatientsHistory/' + this.doctorId).then((output) => {
+      axios.get('http://10.177.68.61:8801/doctor/getPatientsHistory/' + this.doctorId).then((output) => {
         console.log(output)
         localStorage.setItem('details', output.data)
         this.hist = output.data
@@ -127,7 +126,7 @@ export default {
     },
     searchQuery () {
       this.histShow = true
-      axios.get('http://10.177.68.116:8800/search/recordsFromHistory/' + this.searchString).then((output) => {
+      axios.get('http://10.177.68.61:8800/search/recordsFromHistory/' + this.searchString).then((output) => {
         console.log(output)
         localStorage.setItem('details', output.data)
         this.search = output.data
@@ -143,7 +142,7 @@ export default {
   },
   mounted () {
     this.doctorId = localStorage.getItem('id')
-    axios.get('http://10.177.68.116:8801/doctor/patientList/' + this.doctorId).then((result) => {
+    axios.get('http://10.177.68.61:8801/doctor/patientList/' + this.doctorId).then((result) => {
       console.log(result)
       localStorage.setItem('details', result.data)
       this.results = result.data

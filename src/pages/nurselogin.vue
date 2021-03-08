@@ -75,7 +75,7 @@ export default {
   },
   mounted () {
     this.id = localStorage.getItem('id')
-    axios.get('http://10.177.68.33:8080/nurse/patientList/' + this.id).then((result) => {
+    axios.get('http://10.177.68.61:8080/nurse/patientList/' + this.id).then((result) => {
       console.log(result)
       localStorage.setItem('details', result.data)
       this.results = result.data
@@ -88,7 +88,7 @@ export default {
     history () {
       this.histShow = true
       this.patientId = localStorage.getItem('id')
-      axios.get('http://10.177.68.116:8801/nurse/getPatientsHistory/' + this.patientId).then((output) => {
+      axios.get('http://10.177.68.61:8801/nurse/getPatientsHistory/' + this.patientId).then((output) => {
         console.log(output)
         localStorage.setItem('details', output.data)
         this.hist = output.data
@@ -103,7 +103,7 @@ export default {
     },
     searchQuery () {
       this.histShow = true
-      axios.get('http://10.177.68.116:8800/search/recordsFromHistory/' + this.searchString).then((output) => {
+      axios.get('http://10.177.68.61:8800/search/recordsFromHistory/' + this.searchString).then((output) => {
         console.log(output)
         localStorage.setItem('details', output.data)
         this.search = output.data

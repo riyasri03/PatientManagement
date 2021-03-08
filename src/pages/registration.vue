@@ -128,7 +128,7 @@ export default {
         currentMedication: this.currentMedication
       }
       if (this.validate()) {
-        axios.post('http://10.177.68.116:8801/patient/registration', body).then((res) => {
+        axios.post('http://10.177.68.61:8801/patient/registration', body).then((res) => {
           console.log(res)
           const data = res.data
           if (data === '') {
